@@ -1,0 +1,22 @@
+name: Stock Alarm
+on:
+  schedule:
+    - cron: '30 0 * * 1-5'  # 한국 시간 기준 평일 오전 9:30 (UTC 00:30)
+  workflow_dispatch:        # 직접 실행 버튼 추가
+jobs:
+  run_bot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install pykrx google-generativeai requests pandas
+      - name: Run script
+        run: python main.py
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
